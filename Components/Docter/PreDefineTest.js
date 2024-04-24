@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 
-const PreDefinePractices = ({ route }) => {
-  const [practice, setPractice] = useState([]);
+const PreDefineTests = ({ route }) => {
+  const [test, setTest] = useState([]);
 
   const fetchData = async () => {
     try {
-      const url = `http://192.168.100.9/LernSpace/api/practice/getPractices?Uid=${route.params.uid}`;
+      const url = `http://192.168.100.9/LernSpace/api/test/gettests?Uid=${route.params.uid}`;
       const response = await fetch(url);
       const data = await response.json();
-      setPractice(data);
+      setTest(data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -37,9 +37,9 @@ const PreDefinePractices = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Predefined Practices</Text>
+      <Text style={styles.header}>Predefined tests</Text>
       <FlatList
-        data={practice}
+        data={test}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.list}
@@ -78,4 +78,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PreDefinePractices;
+export default PreDefineTests;

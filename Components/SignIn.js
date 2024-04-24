@@ -20,9 +20,9 @@ const SignIn = ({navigation}) => {
       Alert.alert(data);
     } else {
       // navigation.navigate('UserDefinePractice', data);
-      if (data.type === 'doctor'||data.type === 'caretaker') {
+      if (data.type === 'doctor' || data.type === 'caretaker') {
         // navigation.navigate('DoctorHome', data);
-        navigation.navigate('PreDefinePractices', data);
+        navigation.navigate('Home', data);
       }
       console.log(data);
     }
