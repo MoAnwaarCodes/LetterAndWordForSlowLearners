@@ -5,13 +5,14 @@ import {
   View,
   FlatList,
   TouchableOpacity,
-  Button,
-  Alert,
+  Image,
 } from 'react-native';
 
 const PreDefinePractices = ({route}) => {
   const [practice, setPractice] = useState([]);
-  const [practiceCollection, setPracticeCollection] = useState();
+  const [expandedItem, setExpandedItem] = useState(null);
+  const [practiceCollection, setPracticeCollection] = useState([]);
+
   const fetchData = async () => {
     try {
       const url = `${global.url}/LernSpace/api/practice/getPractices?Uid=${route.params.uid}`;
@@ -26,35 +27,51 @@ const PreDefinePractices = ({route}) => {
   useEffect(() => {
     fetchData();
   }, [route.params]);
-  const [hello, setHello] = useState('');
+
+  const toggleDropdown = async item => {
+    const url = `${global.url}/LernSpace/api/practice/getPracticeDetail?pid=${item.id}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      setPracticeCollection(data);
+    } catch (error) {
+      console.log(error);
+    }
+    setExpandedItem(expandedItem === item ? null : item);
+  };
+
   const renderItem = ({item, index}) => {
     const colors = ['#FFD700', '#87CEEB', '#98FB98', '#FFB6C1', '#FFA07A'];
     const backgroundColor = colors[index % colors.length];
+    const isExpanded = expandedItem === item;
+
     return (
-      <>
+      <View style={styles.itemContainer}>
         <TouchableOpacity
-          style={[styles.itemContainer, {backgroundColor}]}
-          onPress={() => onPressItem(item)}>
+          style={[styles.button, {backgroundColor}]}
+          onPress={() => toggleDropdown(item)}>
           <Text style={styles.itemText}>{item.title}</Text>
         </TouchableOpacity>
-       </>
+        {isExpanded && (
+          <View style={styles.dropdownContent}>
+            <FlatList
+              data={practiceCollection}
+              renderItem={({item}) => (
+                <View style={styles.dropdownItem}>
+                  <Text style={styles.dropdownText}>{item.eText}</Text>
+                  <Image
+                    source={{uri: `${global.url}/lernspace${item.picPath}`}}
+                    style={styles.image}
+                  />
+                </View>
+              )}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </View>
+        )}
+      </View>
     );
-  };
-
-  const onPressItem = async item => {
-    // try {
-    //   const response = await fetch(
-    //     `${global.url}/LernSpace/api/Practice/getPracticeDetail?pid=${item.id}`,
-    //   );
-    //   if (!response.ok) {
-    //     throw new Error('Network response was not ok');
-    //   }
-    //   const data = await response.json();
-    //   setPracticeCollection(data);
-    // } catch (error) {
-    //   console.error('Error fetching data:', error);
-    // }
-  setHello("Hello")
   };
 
   return (
@@ -66,7 +83,6 @@ const PreDefinePractices = ({route}) => {
         keyExtractor={item => item.id.toString()}
         contentContainerStyle={styles.list}
       />
-     
     </View>
   );
 };
@@ -89,15 +105,38 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   itemContainer: {
+    marginBottom: 10,
+  },
+  button: {
     paddingVertical: 15,
     paddingHorizontal: 20,
-    marginBottom: 10,
     borderRadius: 8,
   },
   itemText: {
     fontSize: 18,
     color: '#333333',
     fontWeight: 'bold',
+  },
+  dropdownContent: {
+    backgroundColor: '#FFF',
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 5,
+  },
+  dropdownItem: {
+    marginBottom: 10,
+    alignSelf: 'center',
+  },
+  dropdownText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333333',
+    marginBottom: 5,
+  },
+  image: {
+    height: 150,
+    width: 150,
+    borderRadius: 8,
   },
 });
 
