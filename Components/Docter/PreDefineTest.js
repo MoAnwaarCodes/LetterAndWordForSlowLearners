@@ -6,7 +6,7 @@ const PreDefineTests = ({ route }) => {
 
   const fetchData = async () => {
     try {
-      const url = `http://192.168.100.9/LernSpace/api/test/gettests?Uid=${route.params.uid}`;
+      const url = `${global.url}/LernSpace/api/test/gettests?Uid=${route.params.uid}`;
       const response = await fetch(url);
       const data = await response.json();
       setTest(data);
@@ -38,12 +38,12 @@ const PreDefineTests = ({ route }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Predefined tests</Text>
-      <FlatList
+      {test&&<FlatList
         data={test}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.list}
-      />
+      />}
     </View>
   );
 };
