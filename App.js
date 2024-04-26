@@ -10,7 +10,8 @@ import PatientDetail from './Components/Docter/PatientDetail';
 import PreDefinePractices from './Components/Docter/PreDefinePractices';
 import PreDefineTest from './Components/Docter/PreDefineTest';
 import Home from './Components/Docter/Home';
-global.url = 'http://192.168.100.9';
+import PatientPractice from './Components/Patient/PatientPractice';
+global.url = 'http://192.168.1.101';
 const Stack = createNativeStackNavigator();
 // Define a global variable outside of any component
 
@@ -35,6 +36,10 @@ const App = () => {
           component={PreDefinePractices}
         />
 
+        <Stack.Screen
+          name="PatientPreactice"
+          component={PatientPractice}
+        />
         <Stack.Screen
           name="UserDefinePractice"
           component={UserDefinePractice}
