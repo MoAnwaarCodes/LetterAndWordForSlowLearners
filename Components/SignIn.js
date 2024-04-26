@@ -23,6 +23,8 @@ const SignIn = ({navigation}) => {
       if (data.type === 'doctor' || data.type === 'caretaker') {
         // navigation.navigate('DoctorHome', data);
         navigation.navigate('Home', data);
+      } else if (data.type === 'patient') {
+        navigation.navigate('PatientPractice', data);
       }
       console.log(data);
     }
