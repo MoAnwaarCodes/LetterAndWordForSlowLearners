@@ -1,16 +1,15 @@
-import { Alert, Button, StyleSheet, Text, View } from 'react-native'
+import { Alert, Button, StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
 
 const PatientPractice = () => {
-  const fetchData=async()=>{
-    Alert.alert("Clicked")
+  const fetchData = async () => {
+    // Add your logic to fetch data here
   }
-    return (
+
+  return (
     <View>
       <Text>PatientPractice</Text>
-
-
-      <Button title='Click Me' onPress={fetchData}></Button>
+      <Button title='Click Me' onPress={fetchData} />
     </View>
   )
 }
