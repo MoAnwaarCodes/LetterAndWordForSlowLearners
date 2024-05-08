@@ -6,9 +6,11 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Button,
+  Alert,
 } from 'react-native';
 
-const PreDefinetests = ({route}) => {
+const PreDefinetests = ({route,navigation}) => {
   const [test, settest] = useState([]);
   const [expandedItem, setExpandedItem] = useState(null);
   const [testCollection, settestCollection] = useState([]);
@@ -35,6 +37,7 @@ const PreDefinetests = ({route}) => {
     try {
       const response = await fetch(url);
       const data = await response.json();
+     
       settestCollection(data);
     } catch (error) {
       console.log(error);
@@ -68,6 +71,7 @@ const PreDefinetests = ({route}) => {
                       }}
                       style={styles.image}
                     />
+
                     <Image
                       source={{
                         uri: `${global.url}/lernspace${item.Op2ImagePath}`,
@@ -80,6 +84,13 @@ const PreDefinetests = ({route}) => {
                       }}
                       style={styles.image}
                     />
+                    <Image
+                      source={{
+                        uri: `${global.url}/lernspace${item.picPath}`,
+                      }}
+                      style={styles.image}
+                    />
+                    
                   </View>
                 </View>
               )}
@@ -100,6 +111,9 @@ const PreDefinetests = ({route}) => {
         keyExtractor={item => item.id.toString()}
         contentContainerStyle={styles.list}
       />
+      <Button title='Add New Test' onPress={()=>{
+        navigation.navigate('AddTest',{uid: route.params.uid})
+      }}></Button>
     </View>
   );
 };
@@ -154,7 +168,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     height: 100,
-    width: 100,
+    width: 80,
     borderRadius: 8,
   },
   imageContainer: {

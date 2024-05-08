@@ -6,19 +6,21 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Button,
 } from 'react-native';
 
-const PreDefinePractices = ({route}) => {
+const PreDefinePractices = ({route, navigation}) => {
+  const [id, setId] = useState();
   const [practice, setPractice] = useState([]);
   const [expandedItem, setExpandedItem] = useState(null);
   const [practiceCollection, setPracticeCollection] = useState([]);
-
   const fetchData = async () => {
     try {
       const url = `${global.url}/LernSpace/api/practice/getPractices?Uid=${route.params.uid}`;
       const response = await fetch(url);
       const data = await response.json();
       setPractice(data);
+      setId(route.params.id);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -34,6 +36,7 @@ const PreDefinePractices = ({route}) => {
     try {
       const response = await fetch(url);
       const data = await response.json();
+      console.log(data);
       setPracticeCollection(data);
     } catch (error) {
       console.log(error);
@@ -82,6 +85,12 @@ const PreDefinePractices = ({route}) => {
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
         contentContainerStyle={styles.list}
+      />
+      <Button
+        title="Add Practice"
+        onPress={() => {
+          navigation.navigate('AddPractice', {uid: route.params.uid});
+        }}
       />
     </View>
   );
