@@ -1,10 +1,14 @@
-import {StyleSheet, Text, View, TextInput} from 'react-native';
+import {StyleSheet, Text, View, TextInput, Button, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import CheckBox from 'react-native-check-box';
+import {SelectList} from 'react-native-dropdown-select-list';
+import {Picker} from '@react-native-picker/picker';
 
 const AddTest = ({route}) => {
-  const [question, setQuestion] = useState();
-  const [collection, setCollection] = useState();
+  const [question, setQuestion] = useState('');
+  const [collection, setCollection] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [type, setType] = useState(1);
   const fetchCollection = async () => {
     try {
       const url = `${global.url}/lernspace/api/Collection/GetAllCollection`;
@@ -33,16 +37,71 @@ const AddTest = ({route}) => {
       groupedData[item.C_group].push(item);
     });
 
+    const toggleSelectItem = id => {
+      const isSelected = selectedItems.find(item => item.id === id);
+      const updatedCollection = collection.map(item => {
+        if (item.id === id) {
+          item.isChecked = !item.isChecked;
+        }
+        return item;
+      });
+      const selectedCount = updatedCollection.filter(
+        item => item.isChecked,
+      ).length;
+
+      if (
+        (isSelected && selectedCount <= 4) ||
+        (!isSelected && selectedCount <= 4)
+      ) {
+        updateSelectedItems(updatedCollection);
+      } else {
+        alert('Oops, you can only select up to 4 options.');
+      }
+    };
+
+    // const updateSelectedItems = updatedCollection => {
+    //   const selected = updatedCollection.filter(item => item.isChecked);
+    //   const selectedItemsArray = selected.map((item, index) => {
+    //     if (index === 0) {
+    //       return {collectid: item.id};
+    //     } else {
+    //       return {[`op${index}`]: item.id};
+    //     }
+    //   });
+    //   setSelectedItems(selectedItemsArray);
+    // };
+
+    const updateSelectedItems = updatedCollection => {
+      const selected = updatedCollection.filter(item => item.isChecked);
+
+      // Initialize an object to store the selected items
+      let selectedItemsObject = {};
+
+      selected.forEach((item, index) => {
+        if (index === 0) {
+          // For the first selected item, assign collectid key
+          selectedItemsObject['questionTitle'] = question;
+          selectedItemsObject['collectid'] = item.id;
+        } else {
+          // For subsequent selected items, assign op${index} key
+          selectedItemsObject[`op${index}`] = item.id;
+        }
+      });
+
+      // Push the selected items object into an array
+      const selectedItemsArray = [selectedItemsObject];
+
+      // Set the selected items array to state
+      setSelectedItems(selectedItemsArray);
+    };
+
+    
+
     return (
       <View>
         {Object.keys(groupedData).map(group => (
           <View key={group} style={styles.groupContainer}>
-            <CheckBox
-              isChecked={groupedData[group].every(item => item.isChecked)}
-              leftTextStyle={styles.groupHeaderText}
-              leftText={`${group}`}
-              onClick={() => toggleSelectGroup(group)}
-            />
+            <Text style={styles.groupHeaderText}>{group}</Text>
             {groupedData[group].map(item => (
               <CheckBox
                 key={item.id}
@@ -58,9 +117,43 @@ const AddTest = ({route}) => {
     );
   };
 
+  const saveHandler = async () => {
+    finalData = {
+      test: {
+        createBy: route.params.uid,
+        stage: type,
+        title: title,
+      },
+      collectionsIds: selectedItems,
+    };
+    console.log(finalData);
+    const url = `${global.url}/LernSpace/api/Test/AddNewTest`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(finalData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      if (data === 'Data Save') {
+        Alert.alert('Success', 'Practice added successfully.');
+      } else {
+        Alert.alert('Error', 'Failed to save data. Please try again later.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Alert.alert('Error', 'Failed to save data. Please try again later.');
+    }
+  };
+
+  const [title, setTitle] = useState('');
   useEffect(() => {
     fetchCollection();
   }, []);
+
   return (
     <View>
       <Text style={{color: 'black', fontSize: 32, alignSelf: 'center'}}>
@@ -71,9 +164,25 @@ const AddTest = ({route}) => {
           placeholder="Enter Question"
           placeholderTextColor="gray"
           onChangeText={setQuestion}
-          style={styles.input}></TextInput>
+          style={styles.input}
+        />
       </View>
+      <TextInput
+        placeholder="Enter Title"
+        placeholderTextColor="gray"
+        onChangeText={setTitle}
+        style={styles.input}
+      />
+      <Picker
+        style={styles.input1}
+        selectedValue={type}
+        onValueChange={(itemValue, itemIndex) => setType(itemValue)}>
+        <Picker.Item label="Stage 1" value="1" />
+        <Picker.Item label="Stage 2" value="2" />
+      </Picker>
+
       <GroupedData />
+      <Button title="Create Test" onPress={saveHandler} />
     </View>
   );
 };
@@ -81,6 +190,17 @@ const AddTest = ({route}) => {
 export default AddTest;
 
 const styles = StyleSheet.create({
+  input1: {
+    width: '80%',
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 10,
+    backgroundColor: 'white',
+    color: '#333',
+    marginLeft: 10,
+  },
   input: {
     fontSize: 24,
     borderColor: 'black',
@@ -99,9 +219,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 20,
   },
-  
   groupContainer: {
-   marginLeft:8,
+    marginLeft: 8,
     marginBottom: 20,
   },
   groupHeaderText: {
