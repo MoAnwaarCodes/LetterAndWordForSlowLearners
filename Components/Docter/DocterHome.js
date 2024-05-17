@@ -20,7 +20,7 @@ const DoctorHome = ({route, navigation}) => {
   };
   useEffect(() => {
     getCurrentDate();
-  fetchAppointment()
+    fetchAppointment();
   }, [route.params]);
 
   const [currentDate, setCurrentDate] = useState('');
@@ -104,10 +104,35 @@ const DoctorHome = ({route, navigation}) => {
             );
           })
         : null}
+
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => {
+          navigation.navigate('AddAppointment',route.params.uid);
+        }}>
+        <Text style={styles.addButtonText}>Assign Practice</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  addButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  
+  addButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 15,
+    width:'60%',
+    borderRadius: 8,
+    marginBottom: 20,
+    marginTop: 20,
+    alignSelf:'center'
+  },
+});
 
 export default DoctorHome;

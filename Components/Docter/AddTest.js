@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, TextInput, Button, Alert} from 'react-native';
+import {StyleSheet, Text, View, TextInput, Button, Alert,TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import CheckBox from 'react-native-check-box';
 import {SelectList} from 'react-native-dropdown-select-list';
@@ -139,7 +139,7 @@ const AddTest = ({route}) => {
       });
       const data = await response.json();
       if (data === 'Data Save') {
-        Alert.alert('Success', 'Practice added successfully.');
+        Alert.alert('Success', 'Test added successfully.');
       } else {
         Alert.alert('Error', 'Failed to save data. Please try again later.');
       }
@@ -182,7 +182,10 @@ const AddTest = ({route}) => {
       </Picker>
 
       <GroupedData />
-      <Button title="Create Test" onPress={saveHandler} />
+      <TouchableOpacity style={styles.addButton} onPress={saveHandler}>
+        <Text style={styles.addButtonText}>Create Test</Text>
+      </TouchableOpacity>
+    
     </View>
   );
 };
@@ -190,6 +193,18 @@ const AddTest = ({route}) => {
 export default AddTest;
 
 const styles = StyleSheet.create({
+  addButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 15,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  addButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
   input1: {
     width: '80%',
     borderColor: 'black',

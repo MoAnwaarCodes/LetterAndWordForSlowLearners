@@ -10,17 +10,20 @@ import {
 } from 'react-native';
 
 const PreDefinePractices = ({route, navigation}) => {
-  const [id, setId] = useState();
   const [practice, setPractice] = useState([]);
   const [expandedItem, setExpandedItem] = useState(null);
   const [practiceCollection, setPracticeCollection] = useState([]);
+
   const fetchData = async () => {
     try {
       const url = `${global.url}/LernSpace/api/practice/getPractices?Uid=${route.params.uid}`;
       const response = await fetch(url);
       const data = await response.json();
-      setPractice(data);
-      setId(route.params.id);
+      if (data === 'data not found') {
+        setPractice([]);
+      } else {
+        setPractice(data);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -36,8 +39,9 @@ const PreDefinePractices = ({route, navigation}) => {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data);
       setPracticeCollection(data);
+      console.log(practice);
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -50,7 +54,7 @@ const PreDefinePractices = ({route, navigation}) => {
     const isExpanded = expandedItem === item;
 
     return (
-      <View style={styles.itemContainer}>
+      <View style={styles.itemContainer} key={index}>
         <TouchableOpacity
           style={[styles.button, {backgroundColor}]}
           onPress={() => toggleDropdown(item)}>
@@ -60,8 +64,8 @@ const PreDefinePractices = ({route, navigation}) => {
           <View style={styles.dropdownContent}>
             <FlatList
               data={practiceCollection}
-              renderItem={({item}) => (
-                <View style={styles.dropdownItem}>
+              renderItem={({item, index}) => (
+                <View style={styles.dropdownItem} key={index}>
                   <Text style={styles.dropdownText}>{item.eText}</Text>
                   <Image
                     source={{uri: `${global.url}/lernspace${item.picPath}`}}
@@ -69,7 +73,6 @@ const PreDefinePractices = ({route, navigation}) => {
                   />
                 </View>
               )}
-              keyExtractor={(item, index) => index.toString()}
             />
           </View>
         )}
@@ -80,23 +83,33 @@ const PreDefinePractices = ({route, navigation}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Predefined Practices</Text>
-      <FlatList
-        data={practice}
-        renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
-        contentContainerStyle={styles.list}
-      />
-      <Button
-        title="Add Practice"
+      {practice.length > 0 ? (
+        <FlatList
+          data={practice}
+          renderItem={renderItem}
+          contentContainerStyle={styles.list}
+        />
+      ) : (
+        <Text style={styles.placeholderText}>No practices available</Text>
+      )}
+      <TouchableOpacity
+        style={styles.addButton}
         onPress={() => {
           navigation.navigate('AddPractice', {uid: route.params.uid});
-        }}
-      />
+        }}>
+        <Text style={styles.addButtonText}>Add Practice</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  placeholderText: {
+    fontSize: 18,
+    color: 'black',
+    textAlign: 'center',
+    marginTop: 20,
+  },
   container: {
     flex: 1,
     backgroundColor: '#F5F5F5',
@@ -146,6 +159,18 @@ const styles = StyleSheet.create({
     height: 150,
     width: 150,
     borderRadius: 8,
+  },
+  addButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 15,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  addButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

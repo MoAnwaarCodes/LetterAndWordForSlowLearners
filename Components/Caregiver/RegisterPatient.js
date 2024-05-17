@@ -1,31 +1,33 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
   Text,
   TextInput,
   View,
-  Button,
-  Alert,
 } from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {Picker} from '@react-native-picker/picker';
 
-const SignUp = ({navigation}) => {
+const RegisterPatient = ({navigation, route}) => {
   const [name, setName] = useState('');
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
-  const [type, setType] = useState('doctor');
   const [image, setImage] = useState('');
+  const [age, setAge] = useState('');
+  const [stage, setStage] = useState('1'); // Stage should be a string
+  const [gender, setGender] = useState('male'); // Default gender should be lowercase
 
   const imageHandler = () => {
     const options = {
       mediaType: 'photo',
     };
     launchImageLibrary(options, response => {
-      if (response.didCancel) {
-        console.log('Image selection cancelled');
-      } else {
+      if (
+        !response.didCancel &&
+        response.assets &&
+        response.assets.length > 0
+      ) {
         setImage({
           name: response.assets[0].fileName,
           uri: response.assets[0].uri,
@@ -38,13 +40,21 @@ const SignUp = ({navigation}) => {
   const saveHandler = async () => {
     console.log('Clicked');
     var formData = new FormData();
-    formData.append('profilePic', image);
+
+    if (image) {
+      // Check if image is defined
+      formData.append('profpic', image);
+    }
+
     formData.append('name', name);
+    formData.append('age', parseInt(age)); // Parse age as a number
+    formData.append('stage', parseInt(stage));
+    formData.append('gender', gender);
     formData.append('username', userName);
     formData.append('password', password);
-    formData.append('type', type);
-
-    const url = `${global.url}/LernSpace/api/user/SignUp`;
+    formData.append('caregiverid', route.params.uid);
+    console.log(formData);
+    const url = `${global.url}/LernSpace/api/user/CaregiverRegisterPatient`;
 
     try {
       const response = await fetch(url, {
@@ -54,16 +64,9 @@ const SignUp = ({navigation}) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-
-      if (response.ok) {
-        const result = await response.json();
-        if (result == 'registerd') {
-          navigation.navigate('SignIn');
-          console.log(result);
-          console.log(image);
-        }
-      } else {
-        console.error('Failed to save data');
+      const data = await response.json();
+      if (data === 'registerd') {
+        navigation.navigate('SignIn');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -80,18 +83,33 @@ const SignUp = ({navigation}) => {
         style={styles.input}
       />
       <TextInput
+        placeholderTextColor="#888"
+        onChangeText={setAge}
+        placeholder="Enter Your Age"
+        style={styles.input}
+        keyboardType="numeric" // Set keyboard type to numeric
+      />
+      <Picker
+        style={styles.input}
+        selectedValue={gender}
+        onValueChange={(itemValue, itemIndex) => setGender(itemValue)}>
+        <Picker.Item label="Male" value="male" />
+        <Picker.Item label="Female" value="female" />
+      </Picker>
+
+      <Picker
+        style={styles.input}
+        selectedValue={stage}
+        onValueChange={(itemValue, itemIndex) => setStage(itemValue)}>
+        <Picker.Item label="Stage 1" value="1" />
+        <Picker.Item label="Stage 2" value="2" />
+      </Picker>
+      <TextInput
         placeholder="Enter UserName"
         onChangeText={setUserName}
         style={styles.input}
         placeholderTextColor="#888"
       />
-      <Picker
-        style={styles.input}
-        selectedValue={type}
-        onValueChange={(itemValue, itemIndex) => setType(itemValue)}>
-        <Picker.Item label="Doctor" value="doctor" />
-        <Picker.Item label="Caretaker" value="caretaker" />
-      </Picker>
       <TextInput
         placeholderTextColor="#888"
         onChangeText={setPassword}
@@ -109,7 +127,7 @@ const SignUp = ({navigation}) => {
   );
 };
 
-export default SignUp;
+export default RegisterPatient;
 
 const styles = StyleSheet.create({
   container: {

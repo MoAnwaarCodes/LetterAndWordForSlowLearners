@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, Button, TextInput, Alert} from 'react-native';
+import {StyleSheet, Text, View,  TextInput, Alert,TouchableOpacity} from 'react-native';
 import CheckBox from 'react-native-check-box';
 
 const AddPractice = ({route}) => {
@@ -46,7 +46,6 @@ const AddPractice = ({route}) => {
       return item;
     });
     setCollection(updatedCollection);
-
     updateSelectedItems(updatedCollection);
   };
 
@@ -94,7 +93,7 @@ const AddPractice = ({route}) => {
   };
 
   const saveHandler = async () => {
-    finalData = {
+    const finalData = {
       practice: {
         stage: stage,
         title: title,
@@ -142,12 +141,26 @@ const AddPractice = ({route}) => {
         style={styles.input}
       />
       <GroupedData />
-      <Button title="Add Practice" onPress={saveHandler} />
+      <TouchableOpacity style={styles.addButton} onPress={saveHandler}>
+        <Text style={styles.addButtonText}>Create Practice</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  addButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 15,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  addButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -157,6 +170,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     alignSelf: 'center',
     marginBottom: 20,
+    color: 'black',
   },
   input: {
     marginBottom: 10,
@@ -165,7 +179,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    color:'black'
+    color: 'black',
   },
   groupContainer: {
     marginBottom: 20,

@@ -13,6 +13,8 @@ import Home from './Components/Docter/Home';
 import PatientPractice from './Components/Patient/PatientPractice';
 import AddPractice from './Components/Docter/AddPractice';
 import AddTest from './Components/Docter/AddTest';
+import RegisterPatient from './Components/Caregiver/RegisterPatient';
+import AddAppointment from './Components/Docter/AddAppointment';
 global.url = 'http://192.168.100.9';
 
 const Stack = createNativeStackNavigator();
@@ -31,26 +33,19 @@ const App = () => {
         <Stack.Screen name="PreDefineTest" component={PreDefineTest} />
         <Stack.Screen name="SignUp" component={SignUp} />
 
-        <Stack.Screen name="DoctorHome" component={DocterHome} />
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="RegisterPatient" component={RegisterPatient} />
 
+        <Stack.Screen name="DoctorHome" component={DocterHome} />
         <Stack.Screen
           name="PreDefinePractices"
           component={PreDefinePractices}
         />
+        <Stack.Screen name="AddAppointment" component={AddAppointment} />
 
-        <Stack.Screen
-          name="PatientPractice"
-          component={PatientPractice}
-        />
-        <Stack.Screen
-          name="AddPractice"
-          component={AddPractice}
-        />
-        <Stack.Screen
-          name="AddTest"
-          component={AddTest}
-        />
+        <Stack.Screen name="PatientPractice" component={PatientPractice} />
+        <Stack.Screen name="AddPractice" component={AddPractice} />
+        <Stack.Screen name="AddTest" component={AddTest} />
         <Stack.Screen
           name="UserDefinePractice"
           component={UserDefinePractice}

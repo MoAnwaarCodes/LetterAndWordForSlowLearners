@@ -10,17 +10,21 @@ import {
   Alert,
 } from 'react-native';
 
-const PreDefinetests = ({route,navigation}) => {
-  const [test, settest] = useState([]);
+const PreDefinetests = ({route, navigation}) => {
+  const [test, setTest] = useState([]);
   const [expandedItem, setExpandedItem] = useState(null);
-  const [testCollection, settestCollection] = useState([]);
+  const [testCollection, setTestCollection] = useState([]);
 
   const fetchData = async () => {
     try {
       const url = `${global.url}/LernSpace/api/test/gettests?Uid=${route.params.uid}`;
       const response = await fetch(url);
       const data = await response.json();
-      settest(data);
+      if (data === 'data not fornd') {
+        setTest([]);
+      } else {
+        setTest(data);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -37,8 +41,8 @@ const PreDefinetests = ({route,navigation}) => {
     try {
       const response = await fetch(url);
       const data = await response.json();
-     
-      settestCollection(data);
+
+      setTestCollection(data);
     } catch (error) {
       console.log(error);
     }
@@ -51,9 +55,9 @@ const PreDefinetests = ({route,navigation}) => {
     const isExpanded = expandedItem === item;
 
     return (
-      <View style={styles.itemContainer}>
+      <View style={[styles.itemContainer, {backgroundColor}] } key={index}>
         <TouchableOpacity
-          style={[styles.button, {backgroundColor}]}
+          style={styles.button}
           onPress={() => toggleDropdown(item)}>
           <Text style={styles.itemText}>{item.title}</Text>
         </TouchableOpacity>
@@ -61,8 +65,8 @@ const PreDefinetests = ({route,navigation}) => {
           <View style={styles.dropdownContent}>
             <FlatList
               data={testCollection}
-              renderItem={({item}) => (
-                <View style={styles.dropdownItem}>
+              renderItem={({item,index}) => (
+                <View style={styles.dropdownItem} key={index}>
                   <Text style={styles.dropdownText}>{item.questionTitle}</Text>
                   <View style={styles.imageContainer}>
                     <Image
@@ -90,11 +94,10 @@ const PreDefinetests = ({route,navigation}) => {
                       }}
                       style={styles.image}
                     />
-                    
                   </View>
                 </View>
               )}
-              keyExtractor={(item, index) => index.toString()}
+            //  keyExtractor={(item, index) => index.toString()}
             />
           </View>
         )}
@@ -105,20 +108,34 @@ const PreDefinetests = ({route,navigation}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Predefined tests</Text>
-      <FlatList
-        data={test}
-        renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
-        contentContainerStyle={styles.list}
-      />
-      <Button title='Add New Test' onPress={()=>{
-        navigation.navigate('AddTest',{uid: route.params.uid})
-      }}></Button>
+      {test.length > 0 ? (
+        <FlatList
+          data={test}
+          renderItem={renderItem}
+         // keyExtractor={item => item.id.toString()}
+          contentContainerStyle={styles.list}
+        />
+      ) : (
+        <Text style={styles.placeholderText}>No Test Available</Text>
+      )}
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => {
+          navigation.navigate('AddTest', {uid: route.params.uid});
+        }}>
+        <Text style={styles.addButtonText}>Add New Test</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  placeholderText: {
+    fontSize: 18,
+    color: 'black',
+    textAlign: 'center',
+    marginTop: 20,
+  },
   container: {
     flex: 1,
     backgroundColor: '#F5F5F5',
@@ -137,16 +154,18 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     marginBottom: 10,
+    borderRadius: 8,
+    overflow: 'hidden',
   },
   button: {
     paddingVertical: 15,
     paddingHorizontal: 20,
-    borderRadius: 8,
   },
   itemText: {
     fontSize: 18,
     color: '#333333',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   dropdownContent: {
     backgroundColor: '#FFF',
@@ -176,7 +195,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 10,
   },
-  
+  addButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 15,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  addButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
 });
 
 export default PreDefinetests;

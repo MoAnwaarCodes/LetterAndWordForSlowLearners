@@ -7,4 +7,5 @@ import {name as appName} from './app.json';
 import UserDefinePractice from './Components/UserDefinePractice';
 import AddPractice from './Components/Docter/AddPractice';
 import Tester from './Components/Tester';
+import DocterHome from './Components/Docter/DocterHome';
 AppRegistry.registerComponent(appName, () =>App);
