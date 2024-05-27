@@ -15,6 +15,10 @@ import AddPractice from './Components/Docter/AddPractice';
 import AddTest from './Components/Docter/AddTest';
 import RegisterPatient from './Components/Caregiver/RegisterPatient';
 import AddAppointment from './Components/Docter/AddAppointment';
+import DoctorDashBoard from './Components/Docter/DoctorDashBoard';
+import PatientDashboard from './Components/Docter/DoctorDashBoard';
+import CaretakerDashBoard from './Components/Caregiver/CaretakerDashBoard';
+import TestDetails from './Components/Caregiver/TestDetails';
 global.url = 'http://192.168.100.9';
 
 const Stack = createNativeStackNavigator();
@@ -32,7 +36,8 @@ const App = () => {
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="PreDefineTest" component={PreDefineTest} />
         <Stack.Screen name="SignUp" component={SignUp} />
-
+        <Stack.Screen name="TestDetails" component={TestDetails} />
+        
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="RegisterPatient" component={RegisterPatient} />
 

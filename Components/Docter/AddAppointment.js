@@ -1,60 +1,177 @@
-import React, { useState } from 'react';
-import { View, Button, Platform, StyleSheet, Text } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+} from 'react-native';
+import DatePicker from 'react-native-modern-datepicker';
 
-const AddAppointment = () => {
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
-  const [selectedDate, setSelectedDate] = useState('');
+const AddAppointment = ({route, navigation}) => {
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState('2023-05-22');
+  const [feedback, setFeedback] = useState('');
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-
-    let tempDate = new Date(currentDate);
-    let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
-    setSelectedDate(fDate);
-  };
-
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
+  const handleDateChange = selectedDate => {
+    setDate(selectedDate);
   };
 
   return (
-    <View style={styles.container}>
-      <View>
-        <Button onPress={() => showMode('date')} title="Show Date Picker" />
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Add Appointment</Text>
+
+      <TextInput
+        style={styles.input}
+        onChangeText={setFeedback}
+        placeholder="Feedback"
+        placeholderTextColor="#888"
+        value={feedback}
+      />
+      <View style={styles.row}>
+        <Text style={styles.label}>Appointment Date:</Text>
+        <TouchableOpacity onPress={() => setOpen(true)} style={styles.button}>
+          <Text style={styles.buttonText}>Select Date</Text>
+        </TouchableOpacity>
       </View>
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          display="default"
-          onChange={onChange}
-        />
+      {open && (
+        <View style={styles.datePickerContainer}>
+          <DatePicker
+            mode="calendar"
+            selected={date}
+            onDateChange={handleDateChange}
+            style={styles.datePicker}
+          />
+          <TouchableOpacity
+            onPress={() => setOpen(false)}
+            style={styles.closeButton}>
+            <Text style={styles.buttonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
       )}
-      <Text style={styles.text}>Selected Date: {selectedDate}</Text>
-    </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Add Practice:</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            navigation.navigate('PreDefinePractices', route.params);
+          }}>
+          <Text style={styles.buttonText}>Add</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Add Test:</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            navigation.navigate('PreDefineTest', route.params);
+          }}>
+          <Text style={styles.buttonText}>Add</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity style={styles.saveButton}>
+        <Text style={styles.buttonText}>Save Appointment</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 };
 
+export default AddAppointment;
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
+    flexGrow: 1,
+    padding: 20,
+    backgroundColor: '#e6f7ff',
     alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#fff',
   },
-  text: {
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#004085',
+    textAlign: 'center',
+  },
+  input: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 20,
+    backgroundColor: '#fff',
+    color: '#333',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: '100%',
+    justifyContent: 'space-between',
+  },
+  label: {
+    color: '#333',
     fontSize: 18,
+    marginRight: 10,
+  },
+  button: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    backgroundColor: '#007bff',
+    borderRadius: 8,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  saveButton: {
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    backgroundColor: '#28a745',
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  closeButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    backgroundColor: '#dc3545',
+    borderRadius: 8,
+    alignItems: 'center',
     marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  datePickerContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  datePicker: {
+    width: '80%',
   },
 });
-
-export default AddAppointment;

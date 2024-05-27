@@ -8,6 +8,7 @@ import {
   Image,
   Button,
 } from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
 
 const PreDefinePractices = ({route, navigation}) => {
   const [practice, setPractice] = useState([]);
@@ -47,38 +48,61 @@ const PreDefinePractices = ({route, navigation}) => {
     }
     setExpandedItem(expandedItem === item ? null : item);
   };
-
+  const [checkedItems, setCheckedItems] = useState({});
+  const handleValueChange = id => {
+    setCheckedItems(prev => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+  const handleButtonClick = () => {
+    const checkedArray = Object.keys(checkedItems)
+      .filter(key => checkedItems[key])
+      .map(key => practice.find(item => item.id === parseInt(key)).id);
+    setArray(checkedArray);
+  };
   const renderItem = ({item, index}) => {
     const colors = ['#FFD700', '#87CEEB', '#98FB98', '#FFB6C1', '#FFA07A'];
     const backgroundColor = colors[index % colors.length];
     const isExpanded = expandedItem === item;
 
     return (
-      <View style={styles.itemContainer} key={index}>
-        <TouchableOpacity
-          style={[styles.button, {backgroundColor}]}
-          onPress={() => toggleDropdown(item)}>
-          <Text style={styles.itemText}>{item.title}</Text>
-        </TouchableOpacity>
-        {isExpanded && (
-          <View style={styles.dropdownContent}>
-            <FlatList
-              data={practiceCollection}
-              renderItem={({item, index}) => (
-                <View style={styles.dropdownItem} key={index}>
-                  <Text style={styles.dropdownText}>{item.eText}</Text>
-                  <Image
-                    source={{uri: `${global.url}/lernspace${item.picPath}`}}
-                    style={styles.image}
-                  />
-                </View>
-              )}
-            />
-          </View>
-        )}
+      <View style={{flexDirection: 'row'}}>
+        <CheckBox
+          value={!!checkedItems[item.id]}
+          onValueChange={() => handleValueChange(item.id)}
+          style={styles.checkbox}
+          tintColors={{true: 'black', false: 'black'}}
+        />
+
+        <View style={styles.itemContainer} key={index}>
+          <TouchableOpacity
+            style={[styles.button, {backgroundColor}]}
+            onPress={() => toggleDropdown(item)}>
+            <Text style={styles.itemText}>{item.title}</Text>
+          </TouchableOpacity>
+
+          {isExpanded && (
+            <View style={styles.dropdownContent}>
+              <FlatList
+                data={practiceCollection}
+                renderItem={({item, index}) => (
+                  <View style={styles.dropdownItem} key={index}>
+                    <Text style={styles.dropdownText}>{item.eText}</Text>
+                    <Image
+                      source={{uri: `${global.url}/lernspace${item.picPath}`}}
+                      style={styles.image}
+                    />
+                  </View>
+                )}
+              />
+            </View>
+          )}
+        </View>
       </View>
     );
   };
+  const [arr, setArray] = useState([]);
 
   return (
     <View style={styles.container}>
@@ -92,13 +116,23 @@ const PreDefinePractices = ({route, navigation}) => {
       ) : (
         <Text style={styles.placeholderText}>No practices available</Text>
       )}
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => {
-          navigation.navigate('AddPractice', {uid: route.params.uid});
-        }}>
-        <Text style={styles.addButtonText}>Add Practice</Text>
-      </TouchableOpacity>
+      <View style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => {
+            handleButtonClick();
+            navigation.navigate('AddAppointment', arr);
+          }}>
+          <Text style={styles.addButtonText}>Assign</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => {
+            navigation.navigate('AddPractice', {uid: route.params.uid});
+          }}>
+          <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -128,6 +162,7 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     marginBottom: 10,
+    width: '85%',
   },
   button: {
     paddingVertical: 15,
@@ -161,9 +196,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   addButton: {
+    padding: 15,
     backgroundColor: '#007bff',
     paddingVertical: 15,
     borderRadius: 8,
+    marginRight: 14,
     marginBottom: 20,
   },
   addButtonText: {
@@ -171,6 +208,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  checkbox: {
+    marginRight: 10,
   },
 });
 
