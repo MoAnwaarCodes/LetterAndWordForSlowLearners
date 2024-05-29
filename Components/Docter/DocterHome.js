@@ -89,6 +89,7 @@ const DoctorHome = ({route, navigation}) => {
                     const data1 = {
                       appointmentId: item.id,
                       pId: item.patientId,
+                      uid: route.params.uid,
                     };
                     navigation.navigate('PatientDetail', data1);
                   }}>

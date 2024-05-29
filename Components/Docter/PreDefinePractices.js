@@ -17,7 +17,7 @@ const PreDefinePractices = ({route, navigation}) => {
 
   const fetchData = async () => {
     try {
-      const url = `${global.url}/LernSpace/api/practice/getPractices?Uid=${route.params.uid}`;
+      const url = `${global.url}/LernSpace/api/practice/getPractices?Uid=${route.params.sending.uid}`;
       const response = await fetch(url);
       const data = await response.json();
       if (data === 'data not found') {
@@ -59,7 +59,11 @@ const PreDefinePractices = ({route, navigation}) => {
     const checkedArray = Object.keys(checkedItems)
       .filter(key => checkedItems[key])
       .map(key => practice.find(item => item.id === parseInt(key)).id);
-    setArray(checkedArray);
+
+    const formattedArray = checkedArray.map(id => ({practiceId: id}));
+
+    //  setArray(checkedArray);
+    return formattedArray;
   };
   const renderItem = ({item, index}) => {
     const colors = ['#FFD700', '#87CEEB', '#98FB98', '#FFB6C1', '#FFA07A'];
@@ -120,8 +124,12 @@ const PreDefinePractices = ({route, navigation}) => {
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => {
-            handleButtonClick();
-            navigation.navigate('AddAppointment', arr);
+            const arr = handleButtonClick();
+            navigation.navigate('AddAppointment', {
+              sending: route.params.sending,
+              receivingP: arr,
+              receivingT:route.params.receivingT
+            });
           }}>
           <Text style={styles.addButtonText}>Assign</Text>
         </TouchableOpacity>

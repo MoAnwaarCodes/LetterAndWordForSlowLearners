@@ -19,7 +19,7 @@ import DoctorDashBoard from './Components/Docter/DoctorDashBoard';
 import PatientDashboard from './Components/Docter/DoctorDashBoard';
 import CaretakerDashBoard from './Components/Caregiver/CaretakerDashBoard';
 import TestDetails from './Components/Caregiver/TestDetails';
-global.url = 'http://192.168.100.9';
+global.url = 'http://192.168.246.102';
 
 const Stack = createNativeStackNavigator();
 // Define a global variable outside of any component

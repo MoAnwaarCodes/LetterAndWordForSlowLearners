@@ -156,7 +156,7 @@ const PatientDetail = ({route, navigation}) => {
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => {
-            navigation.navigate('AddAppointment');
+            navigation.navigate('AddAppointment', route.params);
           }}>
           <Text style={styles.addButtonText}>Add Appointment</Text>
         </TouchableOpacity>

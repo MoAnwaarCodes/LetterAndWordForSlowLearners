@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -14,9 +14,30 @@ const AddAppointment = ({route, navigation}) => {
   const [date, setDate] = useState('2023-05-22');
   const [feedback, setFeedback] = useState('');
 
+  var data = {sending: {}, receivingT: [], receivingP: []};
   const handleDateChange = selectedDate => {
     setDate(selectedDate);
   };
+
+  useEffect(() => {
+    // const params = route.params;
+    // if (params && !Array.isArray(params) && typeof params === 'object') {
+    //   data.sending = route.params;
+    // } else if (Array.isArray(params)) {
+    //   // const [uData, practice, test] = params;
+    //   // if (uData) setUserData(uData);
+    //   // if (practice) setPracticeData(practice);
+    //   // if (test) setTestData(test);
+
+    const obj = route.params;
+    if ('appointmentId' in obj && 'pId' in obj && 'uid' in obj) {
+      data.sending = route.params;
+    } else if ('sending' in obj && 'receivingT' in obj && 'receivingP' in obj) {
+      data.sending = route.params.sending;
+      data.receivingT = route.params.receivingT;
+      data.receivingP = route.params.receivingP;
+    }
+  }, [route.params]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -56,7 +77,7 @@ const AddAppointment = ({route, navigation}) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            navigation.navigate('PreDefinePractices', route.params);
+            navigation.navigate('PreDefinePractices', data);
           }}>
           <Text style={styles.buttonText}>Add</Text>
         </TouchableOpacity>
@@ -67,13 +88,19 @@ const AddAppointment = ({route, navigation}) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            navigation.navigate('PreDefineTest', route.params);
+            navigation.navigate('PreDefineTest', data);
           }}>
           <Text style={styles.buttonText}>Add</Text>
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.saveButton}>
+      <TouchableOpacity
+        style={styles.saveButton}
+        onPress={() => {
+          console.log('Sending', data.sending);
+          console.log('Practice', data.receivingP);
+          console.log('Test', data.receivingT);
+        }}>
         <Text style={styles.buttonText}>Save Appointment</Text>
       </TouchableOpacity>
     </ScrollView>
