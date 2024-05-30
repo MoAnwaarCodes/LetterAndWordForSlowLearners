@@ -1,4 +1,18 @@
 {
   "name": "slowLearner",
-  "displayName": "slowLearner"
+  "displayName": "slowLearner",
+  "expo": {
+    "plugins": [
+      [
+        "react-native-vector-icons",
+        {
+          "iconFontNames": ["Ionicons"]
+        }
+      ]
+    ]
+  }
+  
+
+
+
 }
