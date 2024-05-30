@@ -20,7 +20,7 @@ const SignIn = ({navigation}) => {
       Alert.alert(data);
     } else {
       // navigation.navigate('UserDefinePractice', data);
-      if (data.type === 'doctor' || data.type === 'caretaker') {
+      if (data.type === 'doctor' || data.type === 'caretaker'||data.type==='Caregiver') {
         // navigation.navigate('DoctorHome', data);
         navigation.navigate('Home', data);
       } else if (data.type === 'patient') {

@@ -6,51 +6,52 @@ const Home = ({ route, navigation }) => {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.headerContainer}>
-        <Text style={styles.heading}>Welcome Back {route.params.name}</Text>
+        <Text style={styles.heading}>Welcome Back, {route.params.name}</Text>
       </View>
       <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            navigation.navigate('PreDefinePractices', route.params);
-          }}>
-          <Icon name="book" size={24} color="#fff" style={styles.icon} />
-          <Text style={styles.buttonText}>Show Practices</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            navigation.navigate('PreDefineTest', route.params);
-          }}>
-          <Icon name="flask" size={24} color="#fff" style={styles.icon} />
-          <Text style={styles.buttonText}>Show Tests</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            navigation.navigate('DoctorHome', route.params);
-          }}>
-          <Icon name="calendar" size={24} color="#fff" style={styles.icon} />
-          <Text style={styles.buttonText}>Today's Appointment</Text>
-        </TouchableOpacity>
-
-        {route.params.type === 'caretaker' ? (
+        <View style={styles.row}>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              navigation.navigate('RegisterPatient', route.params);
+              navigation.navigate('PreDefinePractices', route.params);
             }}>
-            <Icon name="person-add" size={24} color="#fff" style={styles.icon} />
-            <Text style={styles.buttonText}>Register Patient</Text>
+            <Icon name="book" size={36} color="#fff" style={styles.icon} />
+            <Text style={styles.buttonText}>Practices</Text>
           </TouchableOpacity>
-        ) : (
-          <View></View>
-        )}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate('PreDefineTest', route.params);
+            }}>
+            <Icon name="flask" size={36} color="#fff" style={styles.icon} />
+            <Text style={styles.buttonText}>Tests</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.row}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate('DoctorHome', route.params);
+            }}>
+            <Icon name="calendar" size={36} color="#fff" style={styles.icon} />
+            <Text style={styles.buttonText}>Appointments</Text>
+          </TouchableOpacity>
+          {(route.params.type === 'caretaker' || route.params.type === 'Caregiver') && (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                navigation.navigate('RegisterPatient', route.params);
+              }}>
+              <Icon name="person-add" size={36} color="#fff" style={styles.icon} />
+              <Text style={styles.buttonText}>Register</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
-      {/* <View style={styles.slopeContainer}>
-        <View style={styles.slopeLine} />
+      <View style={styles.slopeContainer}>
+        <View style={styles.slopeLine1} />
         <View style={styles.slopeLine2} />
-      </View> */}
+      </View>
     </View>
   );
 };
@@ -58,67 +59,80 @@ const Home = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#F3F4F6',
+    position: 'relative',
   },
   headerContainer: {
     marginTop: 60,
     paddingHorizontal: 20,
+    alignItems: 'center',
   },
   container: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    flex: 1, // This ensures the container takes up available space
   },
   heading: {
-    fontSize: 36,
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 30,
-    color: '#5A67D8',
+    color: '#4A56E2',
     textAlign: 'center',
   },
-  button: {
+  row: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    width: '100%',
+  },
+  button: {
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#007BFF',
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 8,
-    marginVertical: 10,
-    width: '80%',
-    elevation: 3,
+    backgroundColor: '#4A56E2',
+    width: '45%', // Adjusting width to fit two buttons per row with some margin
+    aspectRatio: 1, // Ensures the button is a square
+    borderRadius: 10,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
   },
   icon: {
-    marginRight: 10,
+    marginBottom: 10,
   },
   buttonText: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
   },
-  // slopeContainer: {
-  //   width: '100%',
-  //   height: 80,
-  //   marginTop: 50,
-  //   position: 'absolute', // This ensures the slopes don't interfere with other elements
-  //   bottom: 0, // Align the slopes at the bottom of the container
-  // },
-  // slopeLine: {
-  //   width: '100%',
-  //   height: '50%',
-  //   backgroundColor: '#E9B6BF',
-  //   transform: [{ skewY: '20deg' }],
-  //   position: 'absolute',
-  //   bottom: 40,
-  // },
-  // slopeLine2: {
-  //   width: '100%',
-  //   height: '80%',
-  //   backgroundColor: '#9474CC',
-  //   transform: [{ skewY: '20deg' }],
-  //   position: 'absolute',
-  //   bottom: 0,
-  // },
+  slopeContainer: {
+    width: '100%',
+    height: 80,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
+  },
+  slopeLine1: {
+    width: '200%',
+    height: '100%',
+    backgroundColor: '#E9B6BF',
+    transform: [{ skewY: '10deg' }],
+    position: 'absolute',
+    top: 40,
+  },
+  slopeLine2: {
+    width: '200%',
+    height: '100%',
+    backgroundColor: '#9474CC',
+    transform: [{ skewY: '10deg' }],
+    position: 'absolute',
+    top: 60,
+  },
 });
 
 export default Home;
