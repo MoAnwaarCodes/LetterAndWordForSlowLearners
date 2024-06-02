@@ -6,25 +6,25 @@ const Home = ({ route, navigation }) => {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.headerContainer}>
-        <Text style={styles.heading}>Welcome Back, {route.params.name}</Text>
+        <Text style={styles.heading}>Welcome Back : {route.params.name}</Text>
       </View>
       <View style={styles.container}>
         <View style={styles.row}>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              navigation.navigate('PreDefinePractices', route.params);
+              navigation.navigate('AddPractice', route.params);
             }}>
             <Icon name="book" size={36} color="#fff" style={styles.icon} />
-            <Text style={styles.buttonText}>Practices</Text>
+            <Text style={styles.buttonText}>Add Practice</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              navigation.navigate('PreDefineTest', route.params);
+              navigation.navigate('AddTest', route.params);
             }}>
             <Icon name="flask" size={36} color="#fff" style={styles.icon} />
-            <Text style={styles.buttonText}>Tests</Text>
+            <Text style={styles.buttonText}>Add Test</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.row}>

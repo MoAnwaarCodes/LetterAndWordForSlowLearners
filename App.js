@@ -23,7 +23,9 @@ import PersonHome from './Components/Caregiver/PersonHome';
 import PrePersonPractice from './Components/Caregiver/PrePersonPractice';
 import PrePersonTest from './Components/Caregiver/PrePersonTest';
 import AddPerson from './Components/Caregiver/AddPerson';
-global.url = 'http://192.168.100.9';
+import AddPersonPractice from './Components/Caregiver/AddPersonPractice';
+import AddPersonTest from './Components/Caregiver/AddPersonTest';
+global.url = 'http://192.168.143.101';
 
 const Stack = createNativeStackNavigator();
 // Define a global variable outside of any component
@@ -61,6 +63,9 @@ const App = () => {
         <Stack.Screen name="PatientPractice" component={PatientPractice} />
         <Stack.Screen name="AddPractice" component={AddPractice} />
         <Stack.Screen name="AddTest" component={AddTest} />
+        <Stack.Screen name="AddPersonPractice" component={AddPersonPractice} />
+        <Stack.Screen name="AddPersonTest" component={AddPersonTest} />
+        
         <Stack.Screen
           name="UserDefinePractice"
           component={UserDefinePractice}

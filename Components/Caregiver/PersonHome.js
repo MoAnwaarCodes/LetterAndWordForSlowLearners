@@ -39,7 +39,7 @@ const PersonHome = ({ route, navigation }) => {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              navigation.navigate('RegisterPatient', route.params);
+              navigation.navigate('AddPersonPractice', route.params);
             }}>
             <Icon
               name="person-add"
@@ -47,7 +47,35 @@ const PersonHome = ({ route, navigation }) => {
               color="#fff"
               style={styles.icon}
             />
-            <Text style={styles.buttonText}>Register</Text>
+            <Text style={styles.buttonText}>Add Person Practice</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.row}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate('AddPersonTest', route.params);
+            }}>
+            <Icon
+              name="person-add"
+              size={36}
+              color="#fff"
+              style={styles.icon}
+            />
+            <Text style={styles.buttonText}>Add Person Test</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate('AddPersonTest', route.params);
+            }}>
+            <Icon
+              name="person-add"
+              size={36}
+              color="#fff"
+              style={styles.icon}
+            />
+            <Text style={styles.buttonText}>Register Person</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -114,32 +142,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 5, // Added padding for better text appearance
   },
-  slopeContainer: {
-    width: '100%',
-    height: 80,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    overflow: 'hidden',
-    backgroundColor: 'transparent',
-  },
-  slopeLine1: {
-    width: '200%',
-    height: '100%',
-    backgroundColor: '#E0BBE4', // Light pinkish-purple
-    transform: [{ skewY: '10deg' }],
-    position: 'absolute',
-    top: 40,
-  },
-  slopeLine2: {
-    width: '200%',
-    height: '100%',
-    backgroundColor: '#957DAD', // Medium purple
-    transform: [{ skewY: '10deg' }],
-    position: 'absolute',
-    top: 60,
-  },
+  
 });
 
 export default PersonHome;

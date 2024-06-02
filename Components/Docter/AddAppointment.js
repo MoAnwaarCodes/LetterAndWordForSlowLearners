@@ -336,8 +336,9 @@ const AddAppointment = ({route, navigation}) => {
         },
       });
       const data = await response.json();
+      console.log(data)
       if (data === 'Appointment Add SuccessFully') {
-        Alert.alert('Success', 'Test added successfully.');
+        Alert.alert('Success', 'Appointment added successfully.');
       } else {
         Alert.alert('Error', 'Failed to save data. Please try again later.');
       }
@@ -418,14 +419,14 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: '#e6f7ff',
+    backgroundColor: '#F3E5F5', // Light Purple
     alignItems: 'center',
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#004085',
+    color: '#673AB7', // Dark Purple
     textAlign: 'center',
   },
   input: {
@@ -438,7 +439,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     color: '#333',
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 2,
@@ -458,11 +459,11 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 12,
     paddingHorizontal: 20,
-    backgroundColor: '#007bff',
+    backgroundColor: '#9575CD', // Medium Purple
     borderRadius: 8,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 2,
@@ -470,12 +471,12 @@ const styles = StyleSheet.create({
   saveButton: {
     paddingVertical: 15,
     paddingHorizontal: 30,
-    backgroundColor: '#28a745',
+    backgroundColor: '#673AB7', // Dark Purple
     borderRadius: 8,
     alignItems: 'center',
     width: '100%',
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 2,
@@ -483,12 +484,12 @@ const styles = StyleSheet.create({
   closeButton: {
     paddingVertical: 12,
     paddingHorizontal: 20,
-    backgroundColor: '#dc3545',
+    backgroundColor: '#EF5350', // Red
     borderRadius: 8,
     alignItems: 'center',
     marginTop: 20,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 2,

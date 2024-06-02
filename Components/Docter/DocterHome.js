@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Image,
@@ -8,9 +9,8 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
 
-const DoctorHome = ({route, navigation}) => {
+const DoctorHome = ({ route, navigation }) => {
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
@@ -36,116 +36,132 @@ const DoctorHome = ({route, navigation}) => {
     fetchAppointment();
   }, [route.params]);
 
-  const [currentDate, setCurrentDate] = useState('');
-
   return (
-    <View style={{flex: 1}}>
-      <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
+    <ScrollView style={styles.container}>
+      <View style={styles.header}>
         <Image
-          source={{
-            uri: `${global.url}/lernspace${route.params.profPicPath}`,
-          }}
-          style={{height: 200, width: 200, borderRadius: 100}}
+          source={{ uri: `${global.url}/lernspace${route.params.profPicPath}` }}
+          style={styles.profileImage}
         />
-        <View>
-          <Text style={{fontSize: 20, color: 'black', marginLeft: 20}}>
-            Professional
-          </Text>
-
-          <Text
-            style={{
-              fontSize: 32,
-              color: 'black',
-              marginLeft: 20,
-              fontWeight: 'bold',
-            }}>
-            {route.params.name}
-          </Text>
+        <View style={styles.profileText}>
+          <Text style={styles.professionText}>Professional</Text>
+          <Text style={styles.nameText}>{route.params.name}</Text>
         </View>
       </View>
-      <Text
-        style={{
-          fontSize: 32,
-          color: 'black',
-          marginLeft: 20,
-          marginTop: 40,
-          fontWeight: 'bold',
-        }}>
-        Today Appointments
-      </Text>
-      <ScrollView contentContainerStyle={{paddingBottom: 20}}>
-        {todayApp && todayApp.length > 0 ? (
-          todayApp.map((item, index) => {
-            return (
-              <View key={index} style={styles.container}>
-                <Image
-                  source={{
-                    uri: `${global.url}/lernspace${item.profPicPath}`,
-                  }}
-                  style={{height: 100, width: 100, borderRadius: 100}}
-                />
-                <TouchableOpacity
-                  onPress={() => {
-                    const data1 = {
-                      appointmentId: item.id,
-                      pId: item.patientId,
-                      uid: route.params.uid,
-                    };
-                    navigation.navigate('PatientDetail', data1);
-                  }}>
-                  <View>
-                    <Text
-                      style={{fontSize: 22, color: 'black', marginLeft: 20}}>
-                      {item.name}
-                    </Text>
-                    <Text
-                      style={{fontSize: 22, color: 'black', marginLeft: 20}}>
-                      Stage {item.stage}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            );
-          })
-        ) : (
-          <Text style={{fontSize: 18, color: 'black', textAlign: 'center'}}>
-            No appointments for today
-          </Text>
-        )}
-      </ScrollView>
+      <Text style={styles.sectionHeading}>Today's Appointments</Text>
+      {todayApp && todayApp.length > 0 ? (
+        todayApp.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.appointment}
+            onPress={() =>
+              navigation.navigate('PatientDetail', {
+                appointmentId: item.id,
+                pId: item.patientId,
+                uid: route.params.uid,
+              })
+            }>
+            <Image
+              source={{ uri: `${global.url}/lernspace${item.profPicPath}` }}
+              style={styles.patientImage}
+            />
+            <View style={styles.appointmentDetails}>
+              <Text style={styles.patientName}>{item.name}</Text>
+              <Text style={styles.stageText}>Stage {item.stage}</Text>
+            </View>
+          </TouchableOpacity>
+        ))
+      ) : (
+        <Text style={styles.noAppointmentText}>No appointments for today</Text>
+      )}
 
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => {
-          navigation.navigate('AddAppointment', route.params);
-        }}>
+        onPress={() => navigation.navigate('AddAppointment', route.params)}>
         <Text style={styles.addButtonText}>Assign Practice</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFF',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileImage: {
+    height: 200,
+    width: 200,
+    borderRadius: 50,
+  },
+  profileText: {
+    marginLeft: 20,
+  },
+  professionText: {
+    fontSize: 25,
+    color: '#888',
+  },
+  nameText: {
+    fontSize: 24,
+    color: '#333',
+    fontWeight: 'bold',
+  },
+  sectionHeading: {
+    fontSize: 24,
+    color: '#333',
+    fontWeight: 'bold',
+    marginTop: 40,
+  },
+  appointment: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#DDD',
+    paddingVertical: 20,
+    marginTop: 10,
+  },
+  patientImage: {
+    height: 80,
+    width: 80,
+    borderRadius: 40,
+  },
+  appointmentDetails: {
+    marginLeft: 20,
+  },
+  patientName: {
+    fontSize: 18,
+    color: '#333',
+    fontWeight: 'bold',
+  },
+  stageText: {
+    fontSize: 16,
+    color: '#666',
+  },
+  noAppointmentText: {
+    fontSize: 18,
+    color: '#888',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  addButton: {
+    backgroundColor: '#8A2BE2',
+    paddingVertical: 15,
+    borderRadius: 8,
+    marginTop: 40,
+    alignSelf: 'center',
+    width: '60%',
+  },
   addButtonText: {
     color: '#FFF',
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-  },
-
-  addButton: {
-    backgroundColor: '#007bff',
-    paddingVertical: 15,
-    width: '60%',
-    borderRadius: 8,
-    marginBottom: 20,
-    marginTop: 20,
-    alignSelf: 'center',
-  },
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    margin: 20,
   },
 });
 

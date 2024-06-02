@@ -65,7 +65,7 @@ const PrePersonPractice = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>PreDefined Practices</Text>
+      <Text style={styles.headerText}>Pre Defined Test</Text>
       <FlatList
         data={personData}
         renderItem={renderItem}
@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
     width: 100,
     borderRadius: 10,
     marginBottom: 10,
+    margin:8
   },
   textContainer: {
     alignItems: 'center',

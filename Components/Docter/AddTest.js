@@ -1,14 +1,27 @@
-import {StyleSheet, Text, View, TextInput, Button, Alert,TouchableOpacity} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Alert,
+  ScrollView,
+} from 'react-native';
 import CheckBox from 'react-native-check-box';
-import {SelectList} from 'react-native-dropdown-select-list';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 
-const AddTest = ({route}) => {
+const AddTest = ({ route }) => {
   const [question, setQuestion] = useState('');
   const [collection, setCollection] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [type, setType] = useState(1);
+const [title, setTitle]=useState('');
+  useEffect(() => {
+    fetchCollection();
+  }, []);
+
   const fetchCollection = async () => {
     try {
       const url = `${global.url}/lernspace/api/Collection/GetAllCollection`;
@@ -24,101 +37,45 @@ const AddTest = ({route}) => {
     }
   };
 
-  const GroupedData = () => {
-    if (!collection) return null;
-
-    const groupedData = {};
-
-    // Grouping the data based on C_group
-    collection.forEach(item => {
-      if (!groupedData[item.C_group]) {
-        groupedData[item.C_group] = [];
+  const toggleSelectItem = id => {
+    const isSelected = selectedItems.find(item => item.id === id);
+    const updatedCollection = collection.map(item => {
+      if (item.id === id) {
+        item.isChecked = !item.isChecked;
       }
-      groupedData[item.C_group].push(item);
+      return item;
+    });
+    const selectedCount = updatedCollection.filter(item => item.isChecked)
+      .length;
+
+    if ((isSelected && selectedCount <= 4) || (!isSelected && selectedCount <= 4)) {
+      updateSelectedItems(updatedCollection);
+    } else {
+      Alert.alert('Oops', 'You can only select up to 4 options.');
+    }
+  };
+
+  const updateSelectedItems = updatedCollection => {
+    const selected = updatedCollection.filter(item => item.isChecked);
+
+    let selectedItemsObject = {};
+
+    selected.forEach((item, index) => {
+      if (index === 0) {
+        selectedItemsObject['questionTitle'] = question;
+        selectedItemsObject['collectid'] = item.id;
+      } else {
+        selectedItemsObject[`op${index}`] = item.id;
+      }
     });
 
-    const toggleSelectItem = id => {
-      const isSelected = selectedItems.find(item => item.id === id);
-      const updatedCollection = collection.map(item => {
-        if (item.id === id) {
-          item.isChecked = !item.isChecked;
-        }
-        return item;
-      });
-      const selectedCount = updatedCollection.filter(
-        item => item.isChecked,
-      ).length;
+    const selectedItemsArray = [selectedItemsObject];
 
-      if (
-        (isSelected && selectedCount <= 4) ||
-        (!isSelected && selectedCount <= 4)
-      ) {
-        updateSelectedItems(updatedCollection);
-      } else {
-        alert('Oops, you can only select up to 4 options.');
-      }
-    };
-
-    // const updateSelectedItems = updatedCollection => {
-    //   const selected = updatedCollection.filter(item => item.isChecked);
-    //   const selectedItemsArray = selected.map((item, index) => {
-    //     if (index === 0) {
-    //       return {collectid: item.id};
-    //     } else {
-    //       return {[`op${index}`]: item.id};
-    //     }
-    //   });
-    //   setSelectedItems(selectedItemsArray);
-    // };
-
-    const updateSelectedItems = updatedCollection => {
-      const selected = updatedCollection.filter(item => item.isChecked);
-
-      // Initialize an object to store the selected items
-      let selectedItemsObject = {};
-
-      selected.forEach((item, index) => {
-        if (index === 0) {
-          // For the first selected item, assign collectid key
-          selectedItemsObject['questionTitle'] = question;
-          selectedItemsObject['collectid'] = item.id;
-        } else {
-          // For subsequent selected items, assign op${index} key
-          selectedItemsObject[`op${index}`] = item.id;
-        }
-      });
-
-      // Push the selected items object into an array
-      const selectedItemsArray = [selectedItemsObject];
-
-      // Set the selected items array to state
-      setSelectedItems(selectedItemsArray);
-    };
-
-    
-
-    return (
-      <View>
-        {Object.keys(groupedData).map(group => (
-          <View key={group} style={styles.groupContainer}>
-            <Text style={styles.groupHeaderText}>{group}</Text>
-            {groupedData[group].map(item => (
-              <CheckBox
-                key={item.id}
-                isChecked={item.isChecked || false}
-                rightTextStyle={styles.normalText}
-                rightText={item.eText}
-                onClick={() => toggleSelectItem(item.id)}
-              />
-            ))}
-          </View>
-        ))}
-      </View>
-    );
+    setSelectedItems(selectedItemsArray);
   };
 
   const saveHandler = async () => {
-    finalData = {
+    const finalData = {
       test: {
         createBy: route.params.uid,
         stage: type,
@@ -149,17 +106,10 @@ const AddTest = ({route}) => {
     }
   };
 
-  const [title, setTitle] = useState('');
-  useEffect(() => {
-    fetchCollection();
-  }, []);
-
   return (
-    <View>
-      <Text style={{color: 'black', fontSize: 32, alignSelf: 'center'}}>
-        Add Test
-      </Text>
-      <View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.header}>Add Test</Text>
+      <View style={styles.inputContainer}>
         <TextInput
           placeholder="Enter Question"
           placeholderTextColor="gray"
@@ -174,27 +124,103 @@ const AddTest = ({route}) => {
         style={styles.input}
       />
       <Picker
-        style={styles.input1}
+        style={styles.picker}
         selectedValue={type}
         onValueChange={(itemValue, itemIndex) => setType(itemValue)}>
         <Picker.Item label="Stage 1" value="1" />
         <Picker.Item label="Stage 2" value="2" />
       </Picker>
 
-      <GroupedData />
+      <View style={styles.groupContainer}>
+        {collection.map(item => (
+          <View key={item.id} style={styles.itemContainer}>
+            <Image
+              source={{ uri: `${global.url}/lernspace${item.picPath}` }}
+              style={styles.image}
+            />
+            <View style={styles.textContainer}>
+              <Text style={styles.normalText}>{item.eText}</Text>
+            </View>
+            <CheckBox
+              isChecked={item.isChecked || false}
+              onClick={() => toggleSelectItem(item.id)}
+            />
+          </View>
+        ))}
+      </View>
       <TouchableOpacity style={styles.addButton} onPress={saveHandler}>
         <Text style={styles.addButtonText}>Create Test</Text>
       </TouchableOpacity>
-    
-    </View>
+    </ScrollView>
   );
 };
 
-export default AddTest;
-
 const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    backgroundColor: '#F4EEFF',
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+  },
+  header: {
+    fontSize: 32,
+    alignSelf: 'center',
+    marginBottom: 20,
+    color: '#6C3483',
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  input: {
+    fontSize: 18,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: '#FFF',
+    color: 'black',
+  },
+  picker: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: '#FFF',
+    color: 'black',
+  },
+  groupContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  itemContainer: {
+    width: '48%',
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  image: {
+    height: 80,
+    width: 80,
+    borderRadius: 10,
+    marginRight: 10,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  normalText: {
+    fontSize: 18,
+    color: 'black',
+  },
   addButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#9b59b6',
     paddingVertical: 15,
     borderRadius: 8,
     marginBottom: 20,
@@ -205,47 +231,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  input1: {
-    width: '80%',
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
-    marginVertical: 10,
-    backgroundColor: 'white',
-    color: '#333',
-    marginLeft: 10,
-  },
-  input: {
-    fontSize: 24,
-    borderColor: 'black',
-    borderWidth: 2,
-    margin: 8,
-    borderRadius: 10,
-    color: 'black',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 20,
-  },
-  header: {
-    fontSize: 32,
-    alignSelf: 'center',
-    marginBottom: 20,
-  },
-  groupContainer: {
-    marginLeft: 8,
-    marginBottom: 20,
-  },
-  groupHeaderText: {
-    fontWeight: 'bold',
-    fontSize: 34,
-    marginBottom: 5,
-    color: 'black',
-  },
-  normalText: {
-    fontSize: 24,
-    color: 'black',
-  },
 });
+
+export default AddTest;

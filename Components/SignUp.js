@@ -1,17 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
   Text,
   TextInput,
   View,
-  Button,
-  Alert,
 } from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {Picker} from '@react-native-picker/picker';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { Picker } from '@react-native-picker/picker';
 
-const SignUp = ({navigation}) => {
+const SignUp = ({ navigation }) => {
   const [name, setName] = useState('');
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
@@ -72,39 +70,41 @@ const SignUp = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.signUpText}>Sign Up</Text>
-      <TextInput
-        placeholderTextColor="#888"
-        onChangeText={setName}
-        placeholder="Enter Your Full Name"
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Enter UserName"
-        onChangeText={setUserName}
-        style={styles.input}
-        placeholderTextColor="#888"
-      />
-      <Picker
-        style={styles.input}
-        selectedValue={type}
-        onValueChange={(itemValue, itemIndex) => setType(itemValue)}>
-        <Picker.Item label="Doctor" value="doctor" />
-        <Picker.Item label="Caretaker" value="caretaker" />
-      </Picker>
-      <TextInput
-        placeholderTextColor="#888"
-        onChangeText={setPassword}
-        placeholder="Password"
-        secureTextEntry={true}
-        style={styles.input}
-      />
-      <TouchableOpacity onPress={imageHandler}>
-        <Text style={styles.button}>Select Image</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={saveHandler}>
-        <Text style={styles.button}>Sign Up</Text>
-      </TouchableOpacity>
+      <View style={styles.card}>
+        <Text style={styles.signUpText}>Sign Up</Text>
+        <TextInput
+          placeholderTextColor="#888"
+          onChangeText={setName}
+          placeholder="Enter Your Full Name"
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Enter UserName"
+          onChangeText={setUserName}
+          style={styles.input}
+          placeholderTextColor="#888"
+        />
+        <Picker
+          style={styles.input}
+          selectedValue={type}
+          onValueChange={(itemValue, itemIndex) => setType(itemValue)}>
+          <Picker.Item label="Doctor" value="doctor" />
+          <Picker.Item label="Caretaker" value="caretaker" />
+        </Picker>
+        <TextInput
+          placeholderTextColor="#888"
+          onChangeText={setPassword}
+          placeholder="Password"
+          secureTextEntry={true}
+          style={styles.input}
+        />
+        <TouchableOpacity onPress={imageHandler} style={styles.button}>
+          <Text style={styles.buttonText}>Select Image</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={saveHandler} style={styles.button}>
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -116,7 +116,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#CFA6F7',
+  },
+  card: {
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    padding: 20,
+    width: '80%',
+    alignItems: 'center',
   },
   signUpText: {
     fontSize: 24,
@@ -125,26 +132,28 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   input: {
-    width: '80%',
+    width: '100%',
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
     marginVertical: 10,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFF',
     color: '#333',
   },
   button: {
     height: 40,
-    width: '80%',
-    borderColor: 'blue',
-    borderWidth: 1,
+    width: '100%',
     borderRadius: 10,
     padding: 10,
     marginVertical: 10,
-    backgroundColor: 'blue',
-    color: '#fff',
-    textAlign: 'center',
+    backgroundColor: '#8A2BE4',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });
