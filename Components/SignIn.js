@@ -21,8 +21,8 @@ const SignIn = ({ navigation }) => {
     } else {
       if (data.type === 'doctor' || data.type === 'caretaker'||data.type==='Caregiver') {
         navigation.navigate('Home', data);
-      } else if (data.type === 'patient') {
-        navigation.navigate('PatientPractice', data);
+      } else if (data.pid) {
+        navigation.navigate('PatientHome', data);
       }
     }
   };
