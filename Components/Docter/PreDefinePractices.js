@@ -17,13 +17,30 @@ const PreDefinePractices = ({route, navigation}) => {
 
   const fetchData = async () => {
     try {
+      const params = route.params;
+
       const url = `${global.url}/LernSpace/api/practice/getPractices?Uid=${route.params.sending.uid}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      if (data === 'data not found') {
-        setPractice([]);
+      const url1 = `${global.url}/LernSpace/api/practice/getPractices?Uid=${route.params.uid}`;
+      if (
+        'sending' in params &&
+        'receivingT' in params &&
+        'receivingP' in params
+      ) {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data === 'data not found') {
+          setPractice([]);
+        } else {
+          setPractice(data);
+        }
       } else {
-        setPractice(data);
+        const response = await fetch(url1);
+        const data = await response.json();
+        if (data === 'data not found') {
+          setPractice([]);
+        } else {
+          setPractice(data);
+        }
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -66,7 +83,8 @@ const PreDefinePractices = ({route, navigation}) => {
     return formattedArray;
   };
   const renderItem = ({item, index}) => {
-    const colors = ['#FFD700', '#87CEEB', '#98FB98', '#FFB6C1', '#FFA07A'];
+    const colors = ['#9AD', '#A5C'];
+
     const backgroundColor = colors[index % colors.length];
     const isExpanded = expandedItem === item;
 
@@ -128,7 +146,7 @@ const PreDefinePractices = ({route, navigation}) => {
             navigation.navigate('AddAppointment', {
               sending: route.params.sending,
               receivingP: arr,
-              receivingT:route.params.receivingT
+              receivingT: route.params.receivingT,
             });
           }}>
           <Text style={styles.addButtonText}>Assign</Text>
@@ -136,7 +154,8 @@ const PreDefinePractices = ({route, navigation}) => {
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => {
-            navigation.navigate('AddPractice', {uid: route.params.uid});
+            console.log(route.params);
+            navigation.navigate('AddPractice', {uid: route.params.sending.uid});
           }}>
           <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>

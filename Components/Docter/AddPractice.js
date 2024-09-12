@@ -118,6 +118,8 @@ const AddPractice = ({ route }) => {
       },
       collections: selectedItems,
     };
+
+    console.log("Final  Data",finalData)
     const url = `${global.url}/LernSpace/api/practice/AddNewPractice`;
 
     console.log(finalData);
@@ -163,9 +165,8 @@ const AddPractice = ({ route }) => {
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => {
-            //saveHandler()
-
-            console.log(collection);
+            saveHandler()
+          
           }}>
           <Text style={styles.addButtonText}>Create Practice</Text>
         </TouchableOpacity>

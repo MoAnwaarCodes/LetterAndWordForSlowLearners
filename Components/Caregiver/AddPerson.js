@@ -120,6 +120,12 @@ const AddPerson = ({route}) => {
         <TouchableOpacity onPress={imageHandler} style={styles.imageButton}>
           <Text style={styles.buttonText}>Select Image</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={()=>{
+          console.log(image)
+        }} style={styles.imageButton}>
+          <Text style={styles.buttonText}>Click Me</Text>
+        </TouchableOpacity>
+        
         <View style={styles.row}>
           <Text style={styles.label}>Appointment Date:</Text>
           <TouchableOpacity

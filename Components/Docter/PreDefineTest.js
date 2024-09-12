@@ -74,15 +74,14 @@ const PreDefineTest = ({route, navigation}) => {
     const checkedArray = Object.keys(checkedItems)
       .filter(key => checkedItems[key])
       .map(key => tests.find(item => item.id === parseInt(key)).id);
-  
-    const formattedArray = checkedArray.map(id => ({ testId: id }));
-   // setSelectedTestIds(formattedArray);
+
+    const formattedArray = checkedArray.map(id => ({testId: id}));
+    // setSelectedTestIds(formattedArray);
     return formattedArray;
   };
-  
 
   const renderItem = ({item, index}) => {
-    const colors = ['#FFD700', '#87CEEB', '#98FB98', '#FFB6C1', '#FFA07A'];
+    const colors = [ '#9AD','#A5C'];
     const backgroundColor = colors[index % colors.length];
     const isExpanded = expandedItem === item;
 
@@ -173,19 +172,18 @@ const PreDefineTest = ({route, navigation}) => {
           style={styles.addButton}
           onPress={() => {
             const arr = handleButtonClick();
-            console.log(arr)
             navigation.navigate('AddAppointment', {
               sending: route.params.sending,
               receivingP: route.params.receivingP,
-              receivingT:arr
-            });;
+              receivingT: arr,
+            });
           }}>
           <Text style={styles.addButtonText}>Assign</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.addButton, {marginLeft: 10}]}
           onPress={() => {
-            navigation.navigate('AddTest', {uid: route.params.uid});
+            navigation.navigate('AddTest', {uid: route.params.sending.uid});
           }}>
           <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>

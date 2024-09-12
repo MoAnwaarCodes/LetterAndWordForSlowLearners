@@ -389,7 +389,8 @@ const AddAppointment = ({route, navigation}) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            navigation.navigate('PreDefinePractices', data);
+           
+             navigation.navigate('PreDefinePractices', data);
           }}>
           <Text style={styles.buttonText}>Add</Text>
         </TouchableOpacity>
@@ -406,7 +407,10 @@ const AddAppointment = ({route, navigation}) => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.saveButton} onPress={saveHandler}>
+      <TouchableOpacity style={styles.saveButton} onPress={()=>{
+        saveHandler()
+        
+        }}>
         <Text style={styles.buttonText}>Save Appointment</Text>
       </TouchableOpacity>
     </ScrollView>

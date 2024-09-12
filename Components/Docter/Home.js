@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const Home = ({ route, navigation }) => {
+const Home = ({route, navigation}) => {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.headerContainer}>
@@ -31,7 +31,10 @@ const Home = ({ route, navigation }) => {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              navigation.navigate('DoctorHome', route.params);
+              route.params.type === 'caretaker' ||
+              route.params.type === 'Caregiver'
+                ? navigation.navigate('AddAppointment', route.params)
+                : navigation.navigate('DoctorHome', route.params);
             }}>
             <Icon name="calendar" size={36} color="#fff" style={styles.icon} />
             <Text style={styles.buttonText}>Appointments</Text>
@@ -43,7 +46,12 @@ const Home = ({ route, navigation }) => {
               onPress={() => {
                 navigation.navigate('RegisterPatient', route.params);
               }}>
-              <Icon name="person-add" size={36} color="#fff" style={styles.icon} />
+              <Icon
+                name="person-add"
+                size={36}
+                color="#fff"
+                style={styles.icon}
+              />
               <Text style={styles.buttonText}>Register</Text>
             </TouchableOpacity>
           )}
@@ -56,9 +64,29 @@ const Home = ({ route, navigation }) => {
               onPress={() => {
                 navigation.navigate('PersonHome', route.params);
               }}>
-              <Icon name="person-add" size={36} color="#fff" style={styles.icon} />
+              <Icon
+                name="person-add"
+                size={36}
+                color="#fff"
+                style={styles.icon}
+              />
               <Text style={styles.buttonText}>Person Details</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                navigation.navigate('AddSentence', route.params);
+              }}>
+              <Icon
+                name="person-add"
+                size={36}
+                color="#fff"
+                style={styles.icon}
+              />
+              <Text style={styles.buttonText}>Add Sentences</Text>
+            </TouchableOpacity>
+         
+         
           </View>
         )}
       </View>
@@ -102,9 +130,9 @@ const styles = StyleSheet.create({
   },
   centeredRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
     marginBottom: 20,
     width: '100%',
+   justifyContent: 'space-between',
   },
   button: {
     justifyContent: 'center',
@@ -115,7 +143,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 5,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: {width: 0, height: 3},
     shadowOpacity: 0.3,
     shadowRadius: 5,
     marginBottom: 10,
@@ -139,7 +167,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: 'transparent',
   },
-  
 });
 
 export default Home;

@@ -54,7 +54,7 @@ const PersonHome = ({ route, navigation }) => {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              navigation.navigate('AddPersonTest', route.params);
+              navigation.navigate('TwoPersonTest', route.params);
             }}>
             <Icon
               name="person-add"
@@ -62,7 +62,7 @@ const PersonHome = ({ route, navigation }) => {
               color="#fff"
               style={styles.icon}
             />
-            <Text style={styles.buttonText}>Add Person Test</Text>
+            <Text style={styles.buttonText}>Add Two Person Test</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
@@ -77,6 +77,8 @@ const PersonHome = ({ route, navigation }) => {
             />
             <Text style={styles.buttonText}>Register Person</Text>
           </TouchableOpacity>
+       
+       
         </View>
       </View>
       <View style={styles.slopeContainer}>

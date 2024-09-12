@@ -1,75 +1,40 @@
-// import React, { useState, useEffect } from 'react';
-// import { Alert, StyleSheet, Text, View } from 'react-native';
-
-// const PatientDetail = ({ route }) => {
-//   const [appointmentData, setAppointmentData] = useState(null);
-
-//   const fetchDetails = async () => {
-//     try {
-//       const url = `${global.url}/lernspace/api/User/showSpacificAppointmentData?AppointmentId=${route.params.appointmentId}&pid=${route.params.pId}`;
-
-//       const response = await fetch(url);
-
-//       if (response.ok) {
-//         const result = await response.json();
-//         setAppointmentData(result);
-//       } else {
-//         Alert.alert('Error', 'Failed to fetch appointment details');
-//       }
-//     } catch (error) {
-//       Alert.alert('Error', error.message);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchDetails();
-//   }, [route.params]);
-
-//   return (
-//     <View style={styles.container}>
-//       <Text>PatientDetail</Text>
-
-//       {appointmentData && (
-//         <View>
-//           <Text style={{fontSize:25,color:"black"}}>{JSON.stringify(appointmentData)}</Text>
-//         </View>
-//       )}
-//     </View>
-//   );
-// };
-
-// export default PatientDetail;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-// });
-
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  Button,
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import {Dropdown} from 'react-native-element-dropdown';
+import { Dropdown } from 'react-native-element-dropdown';
 
-const PatientDetail = ({route, navigation}) => {
+const PatientDetail = ({ route, navigation }) => {
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
   const [dates, setDates] = useState([]);
+  const [spcDateData, setSpecDateData] = useState([]);
 
   const fetchData = async () => {
     const response = await fetch(
       `${global.url}/lernspace/api/User/GetAllAppointmentsDates?pid=${route.params.pId}`,
     );
     const data = await response.json();
-    setDates(data);
+
+    // Remove time from the dates
+    const formattedData = data.map(item => ({
+      ...item,
+      appointmentDate: item.appointmentDate.split(' ')[0],
+    }));
+
+    setDates(formattedData);
+  };
+
+  const fetchDateData = async (appointmentId) => {
+    const response = await fetch(
+      `${global.url}/lernspace/api/User/showSpacificAppointmentData?Appointmentid=${appointmentId}&pid=${route.params.pId}`,
+    );
+    const data = await response.json();
+    setSpecDateData(data.PracticeData);
   };
 
   useEffect(() => {
@@ -83,36 +48,21 @@ const PatientDetail = ({route, navigation}) => {
       </View>
     );
   };
-  const [spcDateData, setSpecDateData] = useState([]);
-
-  const fetchDateData = async () => {
-    const response = await fetch(
-      `${global.url}/lernspace/api/User/showSpacificAppointmentData?Appointmentid=${value}&pid=${route.params.pId}`,
-    );
-    const data = await response.json();
-    setSpecDateData(data.PracticeData);
-  };
 
   return (
-    <View>
-      <Text
-        style={{
-          color: 'black',
-          fontSize: 40,
-          alignSelf: 'center',
-          fontWeight: 'bold',
-        }}>
+    <View style={styles.screen}>
+      <Text style={styles.headerText}>
         Details
       </Text>
 
       <View style={styles.container}>
         {value || isFocus ? (
-          <Text style={[styles.label, isFocus && {color: 'black'}]}>
-            Dropdown label
+          <Text style={[styles.label, isFocus && { color: '#4A148C' }]}>
+            Select Appointment Date
           </Text>
         ) : null}
         <Dropdown
-          style={[styles.dropdown, isFocus && {borderColor: 'black'}]}
+          style={[styles.dropdown, isFocus && { borderColor: '#4A148C' }]}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}
@@ -121,7 +71,7 @@ const PatientDetail = ({route, navigation}) => {
           search
           maxHeight={300}
           labelField="appointmentDate"
-          valueField="appointmentDate"
+          valueField="id" // Use the id field as the valueField
           placeholder={!isFocus ? 'Select Date' : '...'}
           searchPlaceholder="Search..."
           value={value}
@@ -130,14 +80,14 @@ const PatientDetail = ({route, navigation}) => {
           onChange={item => {
             setValue(item.id);
             setIsFocus(false);
-            fetchDateData();
+            fetchDateData(item.id); // Call fetchDateData with the selected id
           }}
           renderItem={renderItem}
         />
       </View>
       <FlatList
         data={spcDateData}
-        renderItem={({item, index}) => (
+        renderItem={({ item, index }) => (
           <View>
             {index === 0 && (
               <Text style={styles.listItemHeader}>
@@ -152,7 +102,7 @@ const PatientDetail = ({route, navigation}) => {
         keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.listContainer}
       />
-      <View style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
+      <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => {
@@ -161,11 +111,11 @@ const PatientDetail = ({route, navigation}) => {
           <Text style={styles.addButtonText}>Add Appointment</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.addButton}
+          style={styles.secondaryButton}
           onPress={() => {
             navigation.navigate('TestDetails');
           }}>
-          <Text style={styles.addButtonText}>Test Details</Text>
+          <Text style={styles.secondaryButtonText}>Test Details</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -175,23 +125,60 @@ const PatientDetail = ({route, navigation}) => {
 export default PatientDetail;
 
 const styles = StyleSheet.create({
-  addButton: {
-    padding: 15,
-    backgroundColor: '#007bff',
-    paddingVertical: 15,
-    borderRadius: 8,
-    marginRight: 14,
-    marginBottom: 20,
+  screen: {
+    flex: 1,
+    backgroundColor: '#F3E5F5', // Light purple background
   },
-  addButtonText: {
-    color: '#FFF',
-    fontSize: 18,
+  headerText: {
+    color: '#4A148C', // Dark purple color
+    fontSize: 34,
+    alignSelf: 'center',
     fontWeight: 'bold',
-    textAlign: 'center',
+    marginVertical: 20,
   },
-
+  container: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  dropdown: {
+    height: 50,
+    borderColor: '#9575CD', // Medium purple border
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    backgroundColor: '#fff',
+  },
+  placeholderStyle: {
+    fontSize: 16,
+    color: '#7B1FA2', // Darker purple text
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+    color: '#7B1FA2',
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+    color: '#7B1FA2',
+  },
+  item: {
+    padding: 10,
+  },
+  itemText: {
+    fontSize: 16,
+    color: '#7B1FA2',
+  },
+  label: {
+    fontSize: 14,
+    color: '#7B1FA2',
+    marginBottom: 5,
+  },
   listItemContainer: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#fff',
     padding: 20,
     marginVertical: 8,
     borderRadius: 10,
@@ -203,57 +190,54 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.1,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 3,
   },
   listItemHeader: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: 'black',
+    color: '#4A148C',
     marginLeft: 18,
   },
   listItemText: {
     fontSize: 16,
-    color: 'black',
+    color: '#4A148C',
   },
   listContainer: {
     paddingBottom: 20,
   },
-  container: {
-    padding: 16,
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginRight: 14,
+    marginBottom: 20,
   },
-  dropdown: {
-    height: 50,
-    borderColor: '#888',
-    borderWidth: 0.5,
+  addButton: {
+    padding: 15,
+    backgroundColor: '#4A148C', // Dark purple color
+    paddingVertical: 15,
     borderRadius: 8,
-    paddingHorizontal: 8,
-    backgroundColor: '#fff',
+    marginLeft: 14,
   },
-  placeholderStyle: {
-    fontSize: 16,
-    color: 'black',
+  addButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
-  selectedTextStyle: {
-    fontSize: 16,
-    color: 'black',
+  secondaryButton: {
+    padding: 15,
+    backgroundColor: '#9575CD', // Lighter purple color
+    paddingVertical: 15,
+    borderRadius: 8,
+    marginLeft: 14,
   },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-    color: 'black',
-  },
-  item: {
-    padding: 10,
-  },
-  itemText: {
-    fontSize: 16,
-    color: 'black',
+  secondaryButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

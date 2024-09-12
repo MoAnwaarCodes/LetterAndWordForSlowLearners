@@ -15,39 +15,47 @@ const PatientHome = ({ route, navigation }) => {
             onPress={() => {
               navigation.navigate('PatientPractice', route.params);
             }}>
-            <Icon name="book" size={36} color="#fff" style={styles.icon} />
-            <Text style={styles.buttonText}>Assigned Practices</Text>
+            <Icon name="book-outline" size={36} color="#fff" style={styles.icon} />
+            <Text style={styles.buttonText}>Attempt Practices</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
               navigation.navigate('PatientTest', route.params);
             }}>
-            <Icon name="flask" size={36} color="#fff" style={styles.icon} />
-            <Text style={styles.buttonText}>Assigned Test</Text>
+            <Icon name="flask-outline" size={36} color="#fff" style={styles.icon} />
+            <Text style={styles.buttonText}>Attempt Test</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.row}>
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-         //     navigation.navigate('/', route.params);
+              navigation.navigate('AttemptTwoPersonTest', route.params);
             }}>
-            <Icon name="calendar" size={36} color="#fff" style={styles.icon} />
-            <Text style={styles.buttonText}>Person</Text>
+            <Icon name="person-outline" size={36} color="#fff" style={styles.icon} />
+            <Text style={styles.buttonText}>Attempt Two Person Test</Text>
           </TouchableOpacity>
-       
+          {/* <TouchableOpacity
+            style={styles.button}
+            onPress={() => {
+              // navigation.navigate('AnotherScreen', route.params);
+            }}>
+            <Icon name="camera-outline" size={36} color="#fff" style={styles.icon} />
+            <Text style={styles.buttonText}>Facial Recognition</Text>
+          </TouchableOpacity>
+       */}
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              //navigation.navigate('DoctorHome', route.params);
+              navigation.navigate('PIdentify', route.params);
             }}>
-            <Icon name="calendar" size={36} color="#fff" style={styles.icon} />
-            <Text style={styles.buttonText}>Facial Recognition</Text>
+            <Icon name="flask-outline" size={36} color="#fff" style={styles.icon} />
+            <Text style={styles.buttonText}>Two Person Identify</Text>
           </TouchableOpacity>
        
+      
         </View>
-       
       </View>
       <View style={styles.slopeContainer}>
         <View style={styles.slopeLine1} />
@@ -87,12 +95,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: '100%',
   },
-  centeredRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 20,
-    width: '100%',
-  },
   button: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -126,7 +128,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: 'transparent',
   },
-  
 });
 
 export default PatientHome;

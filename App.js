@@ -27,8 +27,11 @@ import AddPersonPractice from './Components/Caregiver/AddPersonPractice';
 import AddPersonTest from './Components/Caregiver/AddPersonTest';
 import PatientHome from './Components/Patient/PatientHome';
 import PatientTest from './Components/Patient/PatientTest';
-
-global.url = 'http://192.168.235.101';
+import PIdentify from './Components/Patient/PIdentify';
+import AddSentence from './Components/Caregiver/AddSentence';
+import TwoPersonTest from './Components/Patient/TwoPersonTest';
+import AttemptTwoPersonTest from './Components/Patient/AttemptTwoPersonTest';
+global.url = 'http://192.168.52.101';
 
 const Stack = createNativeStackNavigator();
 // Define a global variable outside of any component
@@ -43,18 +46,25 @@ const App = () => {
           options={{title: 'Welcome'}}
         />
         <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="PIdentify" component={PIdentify} />
+        <Stack.Screen name="AddSentence" component={AddSentence} />
+        <Stack.Screen
+          name="AttemptTwoPersonTest"
+          component={AttemptTwoPersonTest}
+        />
+
         <Stack.Screen name="PreDefineTest" component={PreDefineTest} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="TestDetails" component={TestDetails} />
         <Stack.Screen name="AddPerson" component={AddPerson} />
         <Stack.Screen name="PatientHome" component={PatientHome} />
-        
+
         <Stack.Screen name="PersonHome" component={PersonHome} />
         <Stack.Screen name="PatientTest" component={PatientTest} />
-        
+
         <Stack.Screen name="PrePersonPractice" component={PrePersonPractice} />
         <Stack.Screen name="PrePersonTest" component={PrePersonTest} />
-      
+
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="RegisterPatient" component={RegisterPatient} />
 
@@ -64,13 +74,14 @@ const App = () => {
           component={PreDefinePractices}
         />
         <Stack.Screen name="AddAppointment" component={AddAppointment} />
+        <Stack.Screen name="TwoPersonTest" component={TwoPersonTest} />
 
         <Stack.Screen name="PatientPractice" component={PatientPractice} />
         <Stack.Screen name="AddPractice" component={AddPractice} />
         <Stack.Screen name="AddTest" component={AddTest} />
         <Stack.Screen name="AddPersonPractice" component={AddPersonPractice} />
         <Stack.Screen name="AddPersonTest" component={AddPersonTest} />
-        
+
         <Stack.Screen
           name="UserDefinePractice"
           component={UserDefinePractice}
@@ -81,3 +92,47 @@ const App = () => {
   );
 };
 export default App;
+
+
+
+
+
+
+
+
+// import {Button, StyleSheet, Text, View} from 'react-native';
+// import React from 'react';
+// import Header from './Components/NewCompnent/Header';
+// import Product from './Components/NewCompnent/Product';
+// const App = () => {
+//   const product = [
+//     {
+//       name: 'Iphone',
+//       color: 'white',
+//       price: 20000,
+//     },
+//     {
+//       name: 'Samsung',
+//       color: 'white',
+//       price: 30000,
+//     },
+//     {
+//       name: 'Nokia',
+//       color: 'Black',
+//       price: 2000,
+//     },
+//   ];
+
+//   return (
+//     <View>
+//       <Header></Header>
+//       {product.map((item, index) => (
+//         <Product item={item} index={index} />
+//       ))}
+//     </View>
+//   );
+// };
+
+// export default App;
+
+// const styles = StyleSheet.create({});

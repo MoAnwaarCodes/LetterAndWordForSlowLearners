@@ -24,21 +24,20 @@ const PatientTest = ({route, navigation}) => {
 
   const fetchTests = async () => {
     const date = getCurrentDate();
-    const url = `${global.url}/lernspace/api/Patient/AssignedTest?Pid=${route.params.pid}&filter=2024-6-04`;
+    const url = `http://192.168.43.188/lernspace/api/Person/GetTwoPersonTest?uid=8`;
     const response = await fetch(url);
     const data = await response.json();
-
-    if (data && data.length > 0) {
-      const allCollections = data.flatMap(item => item.Collections || []);
-      setTestCollection(allCollections);
+    // if (data && data.length > 0) {
+    //   const allCollections = data.flatMap(item => item.Collections || []);
+      setTestCollection(data);
       // Initialize selectedOptions array based on data length
-      setSelectedOptions(
-        allCollections.map(() => ({
-          SelectedOptions: null,
-          AppointmentId: null,
-        })),
-      );
-    }
+    //   setSelectedOptions(
+    //     allCollections.map(() => ({
+    //       SelectedOptions: null,
+    //       AppointmentId: null,
+    //     })),
+    //   );
+   // }
   };
 
   useEffect(() => {
@@ -307,8 +306,8 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   image: {
-    height: 50,
-    width: 50,
+    height: 80,
+    width: 80,
     borderRadius: 15,
     marginBottom: 20,
   },
